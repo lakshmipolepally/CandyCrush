@@ -92,8 +92,8 @@ public class Board : MonoBehaviour
                 if (!blankSpaces[i, j])
                 {
                     Vector2 tempPosition = new Vector2(i, j + offSet);
-                   
-                    GameObject backgroundTile = Instantiate(tileprefab, tempPosition, Quaternion.identity) as GameObject;
+                    Vector2 tilePosition= new Vector2(i,j);
+                    GameObject backgroundTile = Instantiate(tileprefab, tilePosition, Quaternion.identity) as GameObject;
                     backgroundTile.transform.parent = this.transform;
                     backgroundTile.name = "( " + i + " , " + j + " )";
                     int dotToUse = Random.Range(0, dots.Length);
