@@ -40,9 +40,17 @@ public class Board : MonoBehaviour
     public GameObject[,] alldots;
     public Dot currentDot;
     private FindMatches findMatches;
+    private int basePieceValue=20;
+    private int streakValue=1;
+    private ScoreManager scoreManager;
+    private SoundManager soundManager;
+    public float refillDelay = 0.5f;
+    public int[] scoreGoals;
 
     void Start()
     {
+        soundManager = FindObjectOfType<SoundManager>();
+        scoreManager = FindObjectOfType<ScoreManager>();
         breakableTiles = new BackgroundTile[width, height];
         findMatches = FindObjectOfType<FindMatches>();
         blankSpaces = new bool[width, height];
@@ -287,10 +295,18 @@ public class Board : MonoBehaviour
                     breakableTiles[column, row] = null;
                 }
             }
+            //Does the sound manager exist?
+            if(soundManager!=null)
+            {
+                soundManager.playRandomDestroyNoise();
 
+            }
+           
             GameObject particle = Instantiate(destroyEffect , alldots[column, row].transform.position, Quaternion.identity);
             Destroy(particle, .5f);
             Destroy(alldots[column, row]);
+            scoreManager.IncreaseScore(basePieceValue * streakValue);
+                
             alldots[column, row] = null; 
         }
     }
@@ -338,7 +354,7 @@ public class Board : MonoBehaviour
                 }
             }
         }
-        yield return new WaitForSeconds(.4f);
+        yield return new WaitForSeconds(refillDelay*0.5f);
         StartCoroutine(FillBoardCo());
 
     }
@@ -363,7 +379,7 @@ public class Board : MonoBehaviour
             }
             nullCount = 0;
         }
-        yield return new WaitForSeconds(.4f);
+        yield return new WaitForSeconds(refillDelay*0.5f);
         StartCoroutine(FillBoardCo());
 
     }
@@ -417,11 +433,13 @@ public class Board : MonoBehaviour
     private IEnumerator FillBoardCo()
     {
         RefillBoard();
-        yield return new WaitForSeconds(.5f);
+        yield return new WaitForSeconds(refillDelay);
         while (MatchesOnBoard())
         {
-            yield return new WaitForSeconds(.5f);
+            streakValue++;
             DestroyMatches();
+            yield return new WaitForSeconds(2*refillDelay);
+      
         }
         findMatches.CurrentMatches.Clear();
         currentDot = null;
@@ -430,10 +448,14 @@ public class Board : MonoBehaviour
         {
             ShuffleBoard();
            
+
             Debug.Log("Deadloced!!!");
         }
-        currentState = GameState.move;
+        yield return new WaitForSeconds(refillDelay);
 
+        
+        currentState = GameState.move;
+        streakValue = 1;
     }
 
     private void SwitchPieces(int column,int row,Vector2 direction)

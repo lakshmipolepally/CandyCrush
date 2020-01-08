@@ -202,8 +202,11 @@ public class FindMatches : MonoBehaviour
                 if (i >= 0 && i<board.width && j>=0 && j<board.height)
 
                 {
-                    dots.Add(board.alldots[i, j]);
-                    board.alldots[i, j].GetComponent<Dot>().isMatched = true;
+                    if (board.alldots[i, j] != null)
+                    {
+                        dots.Add(board.alldots[i, j]);
+                        board.alldots[i, j].GetComponent<Dot>().isMatched = true;
+                    }
                 }
             }
         }
@@ -217,8 +220,13 @@ public class FindMatches : MonoBehaviour
         {
             if(board.alldots[column,i]!=null)
             {
+                Dot dot = board.alldots[column, i].GetComponent<Dot>();
+                if(dot .isRowBomb)
+                {
+                    dots.Union(GetRowPieces(i)).ToList();
+                }
                 dots.Add(board.alldots[column, i]);
-                board.alldots[column, i].GetComponent<Dot>().isMatched = true;
+                dot.isMatched = true;
             }
         }
         return dots;
@@ -231,8 +239,13 @@ public class FindMatches : MonoBehaviour
         {
             if (board.alldots[i,row] != null)
             {
+                Dot dot = board.alldots[row, i].GetComponent<Dot>();
+                if (dot.isColumnBomb)
+                {
+                    dots.Union(GetColumnPieces(i)).ToList();
+                }
                 dots.Add(board.alldots[i,row]);
-                board.alldots[i,row].GetComponent<Dot>().isMatched = true;
+                dot.isMatched = true;
             }
         }
         return dots;

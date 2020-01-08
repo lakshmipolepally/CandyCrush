@@ -68,6 +68,8 @@
     <Compile Include="Assets\Scripts\Dot.cs" />
     <Compile Include="Assets\Scripts\FindMatches.cs" />
     <Compile Include="Assets\Scripts\HintManager.cs" />
+    <Compile Include="Assets\Scripts\ScoreManager.cs" />
+    <Compile Include="Assets\Scripts\SoundManager.cs" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>D:/Laxmi/GitHub/CandyCrush/CandyCrush/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>
